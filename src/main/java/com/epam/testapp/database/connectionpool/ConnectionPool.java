@@ -33,6 +33,22 @@ public final class ConnectionPool {
 
     }
 
+     private void init(String databaseClassName, String url, String user, String password) throws PoolException {
+
+        Connection connection;        
+        try {
+            Class.forName (databaseClassName);
+            Locale.setDefault(Locale.ENGLISH);
+            for (int i = 0; i < SIZE; i++) {
+                connection = DriverManager.getConnection(url,user,password);
+                connectionsFree.add(connection);
+            }
+        } catch (SQLException ex) {
+            throw new PoolException("Problem with DriverManager", ex);
+        } catch (ClassNotFoundException ex) {
+            throw new PoolException("Problem with DriverManager", ex);
+        }
+    }
     /**
      * Borrows connection from the pool
      * @return Connection
@@ -89,20 +105,4 @@ public final class ConnectionPool {
         return complete;
     }
 
-    private void init(String databaseClassName, String url, String user, String password) throws PoolException {
-
-        Connection connection;        
-        try {
-            Class.forName (databaseClassName);
-            Locale.setDefault(Locale.ENGLISH);
-            for (int i = 0; i < SIZE; i++) {
-                connection = DriverManager.getConnection(url,user,password);
-                connectionsFree.add(connection);
-            }
-        } catch (SQLException ex) {
-            throw new PoolException("Problem with DriverManager", ex);
-        } catch (ClassNotFoundException ex) {
-            throw new PoolException("Problem with DriverManager", ex);
-        }
-    }
 }

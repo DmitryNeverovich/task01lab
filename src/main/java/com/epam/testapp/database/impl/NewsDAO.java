@@ -9,7 +9,7 @@ import com.epam.testapp.database.connectionpool.ConnectionPool;
 import com.epam.testapp.database.connectionpool.PoolException;
 import com.epam.testapp.database.DAOAttributeName;
 import com.epam.testapp.database.DAOException;
-import com.epam.testapp.database.INewsDAO;
+import com.epam.testapp.database.AbstractNewsDAO;
 import com.epam.testapp.model.News;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -23,26 +23,36 @@ import java.util.List;
  *
  * @author Dzmitry_Neviarovich
  */
-public class NewsDAO extends INewsDAO {
+public class NewsDAO extends AbstractNewsDAO {
 
     private ConnectionPool connectionPool;
+
+    private static final String SQL_SELECT_FIND_ALL_QUERY = "SELECT * FROM NEWS_DATA ORDER BY NEWS_DATE DESC";
+    private static final String SQL_SELECT_FIND_BY_ID_QUERY = "SELECT * FROM NEWS_DATA WHERE NEWS_ID = ?";
+    private static final String SQL_INSERT_NEWS_QUERY = "INSERT INTO NEWS_DATA (TITLE,NEWS_DATE,BRIEF,CONTENT) VALUES (?,?,?,?)";
+    private static final String SQL_UPDATE_NEWS_QUERY = "UPDATE NEWS_DATA SET NEWS_DATE=?,BRIEF=?,CONTENT=?,TITLE=? WHERE NEWS_ID=?";
+    private static final String SQL_DELETE_NEWS_QUERY = "DELETE FROM NEWS_DATA WHERE NEWS_ID IN (";
+
+    private StringBuilder generateDeleteQuery(Integer[] ids) {
         
-    private static final String SQL_SELECT_FIND_ALL = "SELECT * FROM NEWS_DATA ORDER BY NEWS_DATE DESC";
-    private static final String SQL_SELECT_FIND_BY_ID = "SELECT * FROM NEWS_DATA WHERE NEWS_ID = ?";
-    private static final String SQL_INSERT_NEWS = "INSERT INTO NEWS_DATA (TITLE,NEWS_DATE,BRIEF,CONTENT) VALUES (?,?,?,?)";
-    private static final String SQL_UPDATE_NEWS = "UPDATE NEWS_DATA SET NEWS_DATE=?,BRIEF=?,CONTENT=?,TITLE=? WHERE NEWS_ID=?";
-    private static final String SQL_DELETE_NEWS_S = "DELETE FROM NEWS_DATA WHERE NEWS_ID IN (";
-    private static final String SQL_DELETE_NEWS_C = ",";
-    private static final String SQL_DELETE_NEWS_E = ")";
-    
-    private static final String ID = "NEWS_ID";
-    
+        StringBuilder sqlRequestDelete = new StringBuilder(SQL_DELETE_NEWS_QUERY);
+        sqlRequestDelete.append(ids[0]);
+        
+        for (int j = 1; j < ids.length; j++) {
+            sqlRequestDelete.append(",");
+            sqlRequestDelete.append(ids[j]);
+        }
+        sqlRequestDelete.append(")");
+        
+        return sqlRequestDelete;
+    }
+
     @Override
     public List<News> getList() throws DAOException {
 
+        List<News> newsList = null;
         Statement statement = null;
         News news = null;
-        List<News> newsList = null;
         Connection connection = null;
 
         try {
@@ -50,17 +60,18 @@ public class NewsDAO extends INewsDAO {
 
             newsList = new ArrayList<>();
             statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(SQL_SELECT_FIND_ALL);
+            ResultSet resultSet = statement.executeQuery(SQL_SELECT_FIND_ALL_QUERY);
 
             while (resultSet.next()) {
                 news = new News();
-                news.setId(resultSet.getInt(DAOAttributeName.ID));
+                news.setId(resultSet.getInt(DAOAttributeName.NEWS_ID));
                 news.setTitle(resultSet.getString(DAOAttributeName.TITLE));
-                news.setDate(resultSet.getDate(DAOAttributeName.DATA));
+                news.setDate(resultSet.getDate(DAOAttributeName.NEWS_DATE));
                 news.setBrief(resultSet.getString(DAOAttributeName.BRIEF));
                 news.setContent(resultSet.getString(DAOAttributeName.CONTENT));
                 newsList.add(news);
             }
+            resultSet.close();
         } catch (SQLException ex) {
             throw new DAOException("Error occurred while executing query", ex);
         } catch (PoolException ex) {
@@ -74,8 +85,8 @@ public class NewsDAO extends INewsDAO {
     }
 
     @Override
-    public News save(News news) throws DAOException{
-        
+    public News save(News news) throws DAOException {
+
         News returnNews = null;
         if (news.getId() == 0) {
             returnNews = create(news);
@@ -84,14 +95,14 @@ public class NewsDAO extends INewsDAO {
         }
         return returnNews;
     }
-    
-    private News update(News news) throws DAOException{
-        
+
+    private News update(News news) throws DAOException {
+
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         try {
             connection = connectionPool.getConnection();
-            preparedStatement = connection.prepareStatement(SQL_UPDATE_NEWS);
+            preparedStatement = connection.prepareStatement(SQL_UPDATE_NEWS_QUERY);
             preparedStatement.setDate(1, new java.sql.Date(news.getDate().getTime()));
             preparedStatement.setString(2, news.getBrief());
             preparedStatement.setString(3, news.getContent());
@@ -110,23 +121,24 @@ public class NewsDAO extends INewsDAO {
         }
         return news;
     }
-    
-    private News create(News news) throws DAOException{
-        
+
+    private News create(News news) throws DAOException {
+
         Connection connection = null;
         PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
         try {
             int result = 0;
             connection = connectionPool.getConnection();
-            preparedStatement = connection.prepareStatement(SQL_INSERT_NEWS, new String[]{ ID });
+            preparedStatement = connection.prepareStatement(SQL_INSERT_NEWS_QUERY, new String[]{DAOAttributeName.NEWS_ID});
             preparedStatement.setString(1, news.getTitle());
             preparedStatement.setDate(2, new java.sql.Date(news.getDate().getTime()));
             preparedStatement.setString(3, news.getBrief());
             preparedStatement.setString(4, news.getContent());
             preparedStatement.executeUpdate();
-            
-            ResultSet resultSet = preparedStatement.getGeneratedKeys();
-            
+
+            resultSet = preparedStatement.getGeneratedKeys();
+
             if (resultSet.next()) {
                 result = resultSet.getInt(1);
             }
@@ -136,6 +148,7 @@ public class NewsDAO extends INewsDAO {
         } catch (PoolException ex) {
             throw new DAOException("Problem with ConnectionPool", ex);
         } finally {
+            closeResultSet(resultSet);
             closeSatement(preparedStatement);
             connectionPool.freeConnection(connection);
         }
@@ -143,25 +156,15 @@ public class NewsDAO extends INewsDAO {
     }
 
     @Override
-    public boolean remove(int[] ids) throws DAOException {
+    public boolean remove(Integer[] ids) throws DAOException {
         boolean complete = false;
         Connection connection = null;
         PreparedStatement preparedStatement = null;
-        
+
         try {
             connection = connectionPool.getConnection();
-            StringBuilder sqlRequestDelete = new StringBuilder(SQL_DELETE_NEWS_S);
-            
-            for (int j=0 ; j < ids.length ; j++) {
-                if (j == (ids.length - 1)) {
-                    sqlRequestDelete.append(ids[j]);
-                    sqlRequestDelete.append(SQL_DELETE_NEWS_E);
-                } else {
-                    sqlRequestDelete.append(ids[j]);
-                    sqlRequestDelete.append(SQL_DELETE_NEWS_C);
-                }
-            }
-            
+            StringBuilder sqlRequestDelete = generateDeleteQuery(ids);
+
             preparedStatement = connection.prepareStatement(sqlRequestDelete.toString());
             preparedStatement.executeUpdate();
             complete = true;
@@ -182,19 +185,19 @@ public class NewsDAO extends INewsDAO {
         PreparedStatement preparedStatement = null;
         News news = null;
         Connection connection = null;
-
+        ResultSet resultSet = null;
         try {
             connection = connectionPool.getConnection();
 
-            preparedStatement = connection.prepareStatement(SQL_SELECT_FIND_BY_ID);
+            preparedStatement = connection.prepareStatement(SQL_SELECT_FIND_BY_ID_QUERY);
             preparedStatement.setInt(1, id);
-            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {
                 news = new News();
-                news.setId(resultSet.getInt(DAOAttributeName.ID));
+                news.setId(resultSet.getInt(DAOAttributeName.NEWS_ID));
                 news.setTitle(resultSet.getString(DAOAttributeName.TITLE));
-                news.setDate(resultSet.getDate(DAOAttributeName.DATA));
+                news.setDate(resultSet.getDate(DAOAttributeName.NEWS_DATE));
                 news.setBrief(resultSet.getString(DAOAttributeName.BRIEF));
                 news.setContent(resultSet.getString(DAOAttributeName.CONTENT));
             }
@@ -203,13 +206,13 @@ public class NewsDAO extends INewsDAO {
         } catch (PoolException ex) {
             throw new DAOException("Problem with ConnectionPool", ex);
         } finally {
+            closeResultSet(resultSet);
             closeSatement(preparedStatement);
             connectionPool.freeConnection(connection);
         }
         return news;
     }
-    
-    @Override
+
     public void setConnectionPool(ConnectionPool connectionPool) {
         this.connectionPool = connectionPool;
     }

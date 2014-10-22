@@ -11,15 +11,12 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.beanutils.Converter;
-import org.apache.log4j.Logger;
 
 /**
  *  ServletContextListener is used to connect converter.
  * 
  */
 public class ControllerServletContextListener implements ServletContextListener{
-
-    private final static Logger logger = Logger.getLogger(ControllerServletContextListener.class);
     
     @Override
     public void contextInitialized(ServletContextEvent sce) {

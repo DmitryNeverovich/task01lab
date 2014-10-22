@@ -13,6 +13,6 @@
     </head>
     <body>
         <h1>ERROR!</h1>
-        <a href="/myStruts/News_action.do?method=list">Home Page</a>
+        <a href="/NewsManagement/News_action.do?method=list">Home Page</a>
     </body>
 </html>

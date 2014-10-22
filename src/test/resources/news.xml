@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<dataset>
+    <NEWS_DATA news_id="1" news_date="2014-11-11"  brief="test brief 1"
+                   content="CONTENT TEST 1"  title="test title 1"/>
+    <NEWS_DATA news_id="2" news_date="2014-11-11" brief="test brief 2" 
+           content="CONTENT TEST 2" title="test title 2"/>
+    <NEWS_DATA news_id="3" news_date="2014-11-11" brief="test brief 3" 
+           content="CONTENT TEST 3" title="test title 3"/>
+    
+</dataset>

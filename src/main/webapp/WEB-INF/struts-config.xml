@@ -13,7 +13,7 @@
     </form-beans>
     
     <global-exceptions>
-        <exception key="error" type="java.lang.Exception" path="/jsp/error.jsp"/>
+        <exception key="error" type="java.lang.Exception" path="error_page"/>
     </global-exceptions>
     
     <global-forwards>
@@ -29,7 +29,7 @@
             <forward name="news_view_page"  path="news_view"/>
             <forward name="news_save_page" path="news_save"/>
             <forward name="news_list_page" path="news_list"/>
-            <forward name="error_page" path="/jsp/error.jsp"/>
+            <forward name="error_page" path="error_page"/>
         </action>
     </action-mappings>   
    
@@ -42,6 +42,12 @@
     
     <plug-in className="org.springframework.web.struts.ContextLoaderPlugIn"> 
         <set-property property="contextConfigLocation" value="/WEB-INF/classes/spring/application-context.xml"/>
+    </plug-in>
+    
+    <plug-in className="org.apache.struts.validator.ValidatorPlugIn">
+        <set-property
+            property="pathnames"
+            value="/WEB-INF/validator-rules.xml,/WEB-INF/validation.xml"/>
     </plug-in>
     
 </struts-config>

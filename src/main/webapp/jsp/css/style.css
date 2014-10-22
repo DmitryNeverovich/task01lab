@@ -53,10 +53,14 @@ body {
 .sidebar ul {
     list-style-image: url(../images/marker.png);
     margin: 10px 0;
-    padding: 0 40px 0 50px;
-    float: right;
+    /*padding: 0 40px 0 50px;*/
+    padding-left: 40px; 
+    margin-left: 50px; 
+    padding-bottom: 20px;
+    float: left;
     background: white;
     line-height: 1.5em;
+    width: 115px;
 }
 .sidebar ul :hover{
     color: #FFCC99;
@@ -65,10 +69,10 @@ body {
     margin-top: 0;
     text-align: center;
     font-size:12px;
-    width: 190px;
+    width: 210px;
     background: #969696;
     color: white;
-    float: right;
+    overflow: hidden;
 } 
 .content { /* Основное содержание страницы */   
     margin-left: 232px; /* Отступ слева */ 
@@ -82,6 +86,7 @@ body {
     color: #A0A0A4;
 }
 .content_body{
+    margin-top: 20px;
     padding: 0 0 0 20px;
 }
 .news_title{
@@ -93,16 +98,30 @@ body {
     vertical-align: top;
 }
 .news_title_head{
-    margin: 10px 0;	
     color: #A0A0A4;
     width:15%;
+/*    border: solid 1px black;*/
 }
 .news_title_body{
-    margin: 10px 0;
+    white-space:pre;
+    margin-top: 0px;
     width:72%;
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+.news_title_body_date{
+    margin-top: 0px;
+    width:72%;
+    margin-bottom: 20px;
+}
+.news_title_body_edit input{
+    margin: 10px 0;
+    width: 300%;
+    overflow:hidden;
 }
 .news_title_body textarea{
-    width:100%;
+    resize: none;
+    width: 100%;
     overflow: scroll;
 }
 .news_title_submit{
@@ -112,7 +131,16 @@ body {
 .news_title_submit input[type="submit"]{
     float:right;
     margin: 10px 3px;
-    width: 7em;
+    width: 8em;
+}
+.news_edit_submit{
+    text-align: center;
+    height: 30px;
+    padding: 0px 40px;
+}
+.news_edit_submit input[type="submit"]{
+    margin: 10px 3px;
+    width: 8em;
 }
 .footer{
     padding: 0;
@@ -120,9 +148,9 @@ body {
     text-align: center;
 }
 .news{
-    /*border: solid 1px black;*/
+/*    border: solid 1px black;*/
     margin: 30px 0 60px 0;
-    min-height: 200px;
+/*    min-height: 200px;*/
 }
 .news_time{
     margin-right: 45px;
@@ -131,8 +159,7 @@ body {
     text-decoration:underline;
 }
 .news_content{
-    width: 86%;
-    float: left;
+    width: 70%;
     padding: 0 150px 0 0 ;
     max-width: 100%;
     word-wrap: break-word;
@@ -141,7 +168,6 @@ body {
     float: right;
 }
 .news_add{
-    
     margin: 30px 30px;
     max-width: 76%;
 }
@@ -159,9 +185,11 @@ body {
     float: right;
 }
 .news_menu{
+    padding-right: 40px;
     text-align: center;
     width: 23%;
     float: right;
+    text-align: right;
 }
 .news_menu a{
     text-decoration:none;

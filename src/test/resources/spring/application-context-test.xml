@@ -5,8 +5,16 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
 ">
-    <context:property-placeholder location="/WEB-INF/classes/properties/database_config.properties" />    
-          
+    <context:property-placeholder location="properties/database_config.properties" />
+      
+    <bean id="dataSource"
+          class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="${database.driver.class.name}" />
+        <property name="url" value="${database.url}" />
+        <property name="username" value="${database.user}" />
+        <property name="password" value="${database.password}" />
+    </bean>
+    
     <bean id="connectionPool" class="com.epam.testapp.database.connectionpool.ConnectionPool" 
           destroy-method="closeAllConnection">
         <constructor-arg name="driverClassName" value="${database.driver.class.name}" />
@@ -14,16 +22,9 @@
         <constructor-arg name="username" value="${database.user}" />
         <constructor-arg name="password" value="${database.password}" />
     </bean>
-       
+            
     <bean id="newsDAO" class="com.epam.testapp.database.impl.NewsDAO">
         <property name="connectionPool" ref="connectionPool" />
     </bean>
-    
-    <bean id="newsService" class="com.epam.testapp.service.impl.NewsService">
-        <property name="newsDAO" ref="newsDAO" />
-    </bean>
-        
-    <bean name="/News_action" class="com.epam.testapp.presentation.action.NewsAction">
-        <property name="newsService" ref="newsService"/>
-    </bean> 
+   
 </beans>

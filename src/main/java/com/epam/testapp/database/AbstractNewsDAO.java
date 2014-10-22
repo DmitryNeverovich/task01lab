@@ -7,6 +7,7 @@ package com.epam.testapp.database;
 
 import com.epam.testapp.database.connectionpool.ConnectionPool;
 import com.epam.testapp.model.News;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
@@ -16,13 +17,7 @@ import java.util.List;
  * 
  */
 
-public abstract class INewsDAO {
-
-    /**
-     * 
-     * @param connectionPool
-     */
-    public abstract void setConnectionPool(ConnectionPool connectionPool);
+public abstract class AbstractNewsDAO {
 
     /**
      * Create List of News objects, with information about all find object in DB
@@ -45,7 +40,7 @@ public abstract class INewsDAO {
      * @return
      * @throws DAOException if a database access error occurs
      */
-    public abstract boolean remove(int[] id)throws DAOException;
+    public abstract boolean remove(Integer[] id)throws DAOException;
 
     /**
      * Create News object, with information about specific object in DataBase
@@ -67,6 +62,16 @@ public abstract class INewsDAO {
                 }
             } catch (SQLException ex) {
                 throw new DAOException("Statement can not be closed", ex);
+            }
+    }
+    
+    public void closeResultSet(ResultSet resultSet) throws DAOException{
+         try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+            } catch (SQLException ex) {
+                throw new DAOException("Result set an not be closed", ex);
             }
     }
 

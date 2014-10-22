@@ -5,11 +5,11 @@
  */
 package com.epam.testapp.utils;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import java.util.ResourceBundle;
 import org.apache.commons.beanutils.Converter;
 
 /**
@@ -28,11 +28,11 @@ public class ConverterStringToDate implements Converter{
         Date date = null;
         
         try {
-            date = new SimpleDateFormat(DATE_FORMAT, Locale.ENGLISH).parse(dateStr);
+            DateFormat dateFormat  = new SimpleDateFormat(DATE_FORMAT);
+            date = dateFormat.parse(dateStr);
         } catch (ParseException ex) {
-            logger.error("Date is not converted");
+            logger.error("Date is not converted", ex);
         }
         return date;
-    }
-    
+    }   
 }

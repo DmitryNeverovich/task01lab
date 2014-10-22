@@ -7,20 +7,29 @@ package com.epam.testapp.presentation.form;
 
 import com.epam.testapp.model.News;
 import java.util.List;
-import org.apache.struts.action.ActionForm;
+import org.apache.struts.validator.ValidatorForm;
 
 /**
  *
  * @author Dzmitry_Neviarovich
  */
-public class NewsForm extends ActionForm{
+public class NewsForm extends ValidatorForm{
     private News newsMessage;
     private List<News> newsList;
+    private Integer[] newsID;
 
     public NewsForm(){
         newsMessage = new News();
     }
 
+    public Integer[] getNewsID() {
+        return newsID;
+    }
+
+    public void setNewsID(Integer[] newsID) {
+        this.newsID = newsID;
+    }
+        
     public News getNewsMessage() {
         return newsMessage;
     }

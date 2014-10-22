@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package com.epam.testapp.utils.filter;
 
 import java.io.IOException;
@@ -17,9 +16,10 @@ import javax.servlet.ServletResponse;
 /**
  *
  * EncodingFilter is used to converting string to date.
+ *
  * @author Dima
  */
-public class EncodingFilter implements Filter{
+public class EncodingFilter implements Filter {
 
     private String code;
 
@@ -33,10 +33,8 @@ public class EncodingFilter implements Filter{
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         String codeRequest = request.getCharacterEncoding();
-        if (code != null && !code.equalsIgnoreCase(codeRequest)) {
-            request.setCharacterEncoding(code);
-            response.setCharacterEncoding(code);
-        }
+        request.setCharacterEncoding(code);
+        response.setCharacterEncoding(code);
         chain.doFilter(request, response);
     }
 
@@ -44,6 +42,5 @@ public class EncodingFilter implements Filter{
     public void destroy() {
         code = null;
     }
-    
-    
+
 }
