@@ -48,6 +48,6 @@
                 <tiles:insert attribute="body"/>
             </div>
         </div>
-        <div class="footer">Copyright © EPAM 2008.All rights reserved.</div>
+        <div class="footer"><bean:message key="news.copyright"/></div>
     </body>
 </html>

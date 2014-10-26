@@ -9,6 +9,7 @@
 <div class="content_head"><a href="/NewsManagement/News_action.do?method=list"><bean:message key="news.content.header"/></a> >> <bean:message key="news.view.content.header.topic"/></div>
 <div class="content_body">
     <html:form action="/News_action">
+        <input type="hidden" name="page" value="page_view">
         <nested:nest property="newsMessage">
             <nested:hidden property="id"/>
             <c:set var="previous_page" value="news_view_page" scope="session"/>

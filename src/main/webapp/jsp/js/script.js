@@ -43,10 +43,10 @@ function checkForm() {
                             errorList.push(9);
                         if (el.name == "date" && !checkDateDay(value))
                             errorList.push(8);
-                        
+
                     }
                     if (el.name == "date" && checkDateMonth(value) && checkDateDay(value) && checkDateYear(value))
-                            prcessDate(value);
+                        prcessDate(value);
                     if (el.name == "newsMessage.title" && !titleCheckLength(el))
                         errorList.push(5);
                     break;
@@ -146,7 +146,7 @@ function checkDateDay(date) {
         }
         return true;
     }
-    
+
     var length = monthes[month - 1];
     if (month == 2 && (year % 400 == 0 || (year % 100 != 0 && year % 4 == 0))) {
         length = 29;
@@ -253,19 +253,20 @@ function contentCheckLength(textArea) {
     return true;
 }
 window.onload = function checkDeleteAllSubmit() {
-    var currentPage = document.location.search.substring(1).split("=")[1].split("&")[0];
-    if (currentPage == "list") {
+    var current_page = document.getElementsByName("page")[0];
+    if (current_page.value == "page_edit") {
+        date_el = document.getElementsByName("date")[0];
+        format_date_el = document.getElementsByName("newsMessage.date")[0];
+
+        date_el.value = format_date_el.value;
+    }
+
+    if (current_page.value == "page_list") {
         if (document.getElementsByClassName('news_head')[0]) {
         }
         else {
             var obj = document.getElementsByName('method')[0];
             obj.style.display = "none";
         }
-    }
-    if (currentPage == "add" || currentPage == "edit" || currentPage == "switchLang") {
-        date_el = document.getElementsByName("date")[0];
-        format_date_el = document.getElementsByName("newsMessage.date")[0];
-
-        date_el.value = format_date_el.value;
     }
 }

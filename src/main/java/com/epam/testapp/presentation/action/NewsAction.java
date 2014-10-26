@@ -10,6 +10,7 @@ import com.epam.testapp.presentation.form.NewsForm;
 import com.epam.testapp.recource.DataUtil;
 import com.epam.testapp.service.IService;
 import com.epam.testapp.service.ServiceException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
@@ -18,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts.Globals;
+import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -38,9 +40,8 @@ public class NewsAction extends LookupDispatchAction {
         this.newsService = newsService;
     }
 
-
     /**
-     * View News List page
+     * Gets list news from the service and returns the ActionForward instance for the page to view list news.
      *
      * @param mapping
      * @param form
@@ -51,19 +52,24 @@ public class NewsAction extends LookupDispatchAction {
     public ActionForward list(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         
         NewsForm newsForm = (NewsForm) form;
-
+        
         try {
             newsForm.setNewsList(newsService.getList());
         } catch (ServiceException ex) {
             logger.error("Problem with DAO", ex);
             return mapping.findForward(DataUtil.ERROR_PAGE);
         }
-                
+        
+        ActionErrors actionErrors = form.validate(mapping, request);
+        if (!actionErrors.isEmpty()) {
+            addErrors(request, actionErrors);
+        }
+        
         return mapping.findForward(DataUtil.NEWS_LIST);
     }
 
     /**
-     * View "News View" page
+     * Gets the selected news from the service and returns the ActionForward instance for the page to view news.
      *
      * @param mapping
      * @param form
@@ -95,7 +101,7 @@ public class NewsAction extends LookupDispatchAction {
     }
 
     /**
-     * View "News Edit" page
+     * Gets the selected news from the service and returns the ActionForward instance for the page to edit news.
      *
      * @param mapping
      * @param form
@@ -108,10 +114,13 @@ public class NewsAction extends LookupDispatchAction {
         NewsForm newsForm = (NewsForm) form;
         String strId = request.getParameter(DataUtil.ID);
         int id = 0;
-        
-        if (!StringUtils.isEmpty(strId)) {
+              
+        if (StringUtils.isNotEmpty(strId)) {
             id = Integer.valueOf(strId);
+        }else{
+            id = newsForm.getNewsMessage().getId();
         }
+        
         try {
             newsForm.setNewsMessage(newsService.findById(id));
         } catch (ServiceException ex) {
@@ -123,7 +132,7 @@ public class NewsAction extends LookupDispatchAction {
     }
 
     /**
-     * Execute delete news
+     * Sends request to remove news from the Service and redirects to view page.
      *
      * @param mapping
      * @param form
@@ -147,7 +156,7 @@ public class NewsAction extends LookupDispatchAction {
     }
 
     /**
-     * View last page
+     * Returns the ActionForward instance for the previous page.
      *
      * @param mapping
      * @param form
@@ -162,7 +171,7 @@ public class NewsAction extends LookupDispatchAction {
     }
 
     /**
-     * Execute save or add news
+     * Sends request to save news from the Service and redirects to view page.
      *
      * @param mapping
      * @param form
@@ -190,7 +199,7 @@ public class NewsAction extends LookupDispatchAction {
     }
 
     /**
-     * View "Create news" page
+     * Returns the ActionForward instance for the page to add news.
      *
      * @param mapping
      * @param form
@@ -209,7 +218,7 @@ public class NewsAction extends LookupDispatchAction {
     }
 
     /**
-     * Execute switch language
+     * Switches the language for the current page.
      *
      * @param mapping
      * @param form
@@ -226,7 +235,6 @@ public class NewsAction extends LookupDispatchAction {
         return mapping.findForward(currentPage);
     }
     
-
     @Override
     protected Map getKeyMethodMap() {
         Map keyMap = new HashMap();

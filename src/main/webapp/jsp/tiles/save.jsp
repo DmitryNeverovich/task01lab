@@ -14,6 +14,7 @@
 <div class="content_head"><a href="/NewsManagement/News_action.do?method=list"><bean:message key="news.content.header"/></a> >> <bean:message key="news.save.content.header.topic"/></div>
 <div class="content_body">
     <html:form action="/News_action">
+        <input type="hidden" name="page" value="page_edit">
         <html:hidden property="newsMessage.id"/>
         <input type="hidden" name="newsMessage.date" value='<bean:write name="newsForm" property="newsMessage.date" formatKey="format.date"/>'/>
         <c:set var="current_page" value="news_save_page" scope="session"/>

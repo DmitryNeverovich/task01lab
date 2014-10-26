@@ -27,7 +27,7 @@ public abstract class AbstractNewsDAO {
     public abstract List<News> getList()throws DAOException;
 
     /**
-     *
+     * Save information about entity in DB
      * @param news
      * @return
      * @throws DAOException if a database access error occurs
@@ -65,6 +65,11 @@ public abstract class AbstractNewsDAO {
             }
     }
     
+    /**
+     * Close ResultSet
+     * @param resultSet
+     * @throws DAOException if a database access error occurs
+     */
     public void closeResultSet(ResultSet resultSet) throws DAOException{
          try {
                 if (resultSet != null) {

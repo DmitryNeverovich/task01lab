@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
+ *  Implementation of DAO for database
  * @author Dzmitry_Neviarovich
  */
 public class NewsDAO extends AbstractNewsDAO {
@@ -47,6 +47,11 @@ public class NewsDAO extends AbstractNewsDAO {
         return sqlRequestDelete;
     }
 
+    /**
+     * Create List of News objects, with information about all find object in DB
+     * @return
+     * @throws DAOException if a database access error occurs
+     */        
     @Override
     public List<News> getList() throws DAOException {
 
@@ -84,6 +89,12 @@ public class NewsDAO extends AbstractNewsDAO {
         return newsList;
     }
 
+    /**
+     * Save information about entity in DB
+     * @param news
+     * @return
+     * @throws DAOException if a database access error occurs
+     */
     @Override
     public News save(News news) throws DAOException {
 
@@ -155,6 +166,12 @@ public class NewsDAO extends AbstractNewsDAO {
         return news;
     }
 
+    /**
+     * Delete information about entity in DB
+     * @param id
+     * @return
+     * @throws DAOException if a database access error occurs
+     */
     @Override
     public boolean remove(Integer[] ids) throws DAOException {
         boolean complete = false;
@@ -179,6 +196,12 @@ public class NewsDAO extends AbstractNewsDAO {
         return complete;
     }
 
+    /**
+     * Create News object, with information about specific object in DataBase
+     * @param id
+     * @return
+     * @throws DAOException if a database access error occurs
+     */
     @Override
     public News findById(int id) throws DAOException {
 

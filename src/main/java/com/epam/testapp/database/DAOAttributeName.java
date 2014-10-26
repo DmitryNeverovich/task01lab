@@ -6,7 +6,7 @@
 package com.epam.testapp.database;
 
 /**
- *
+ * Class containing String constants - names of columns in DB
  * @author Dima
  */
 public class DAOAttributeName {

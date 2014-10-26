@@ -8,6 +8,7 @@ package com.epam.testapp.database.connectionpool;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Locale;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.TimeUnit;
@@ -24,13 +25,20 @@ public final class ConnectionPool {
     private final static int SIZE = 10;
     private ArrayBlockingQueue<Connection> connectionsBusy;
     private ArrayBlockingQueue<Connection> connectionsFree;
-
+    
+    /**
+     * Constructs a connectionpool containing the connections of the specified  database.
+     * 
+     * @param databaseClassName JDBC driver class name 
+     * @param url url database
+     * @param user database username
+     * @param password database password
+     */
     public ConnectionPool(String databaseClassName, String url, String user, String password) throws PoolException {
 
         connectionsBusy = new ArrayBlockingQueue<Connection>(SIZE);
         connectionsFree = new ArrayBlockingQueue<Connection>(SIZE);
         init(databaseClassName, url, user, password);
-
     }
 
      private void init(String databaseClassName, String url, String user, String password) throws PoolException {
@@ -69,7 +77,7 @@ public final class ConnectionPool {
     }
 
     /**
-     *  Returns connection in the pool
+     * Returns connection in the pool
      * @param connection
      * @return true if processing complete, false if processing fail
      */
