@@ -6,7 +6,6 @@ import com.epam.testapp.presentation.form.NewsForm;
 import com.epam.testapp.recource.DataUtil;
 import com.epam.testapp.service.IService;
 import com.epam.testapp.service.ServiceException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;

@@ -27,7 +27,7 @@ public class NewsService implements IService {
         try {
             newsList = newsDAO.getList();
         } catch (DAOException e) {
-            throw new ServiceException("", e);
+            throw new ServiceException("Problem with DAO", e);
         }
         return newsList;
     }
@@ -38,7 +38,7 @@ public class NewsService implements IService {
         try {
             news = newsDAO.save(news);
         } catch (DAOException e) {
-            throw new ServiceException("", e);
+            throw new ServiceException("Problem with DAO", e);
         }
         return news;
     }
@@ -50,7 +50,7 @@ public class NewsService implements IService {
         try {
             complete = newsDAO.remove(id);
         } catch (DAOException e) {
-            throw new ServiceException("", e);
+            throw new ServiceException("Problem with DAO", e);
         }
         return complete;
     }
@@ -61,7 +61,7 @@ public class NewsService implements IService {
         try {
             news = newsDAO.findById(id);
         } catch (DAOException e) {
-            throw new ServiceException("", e);
+            throw new ServiceException("Problem with DAO", e);
         }
         return news;
     }
