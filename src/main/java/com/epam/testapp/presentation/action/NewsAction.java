@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.epam.testapp.presentation.action;
 
 import com.epam.testapp.model.News;
@@ -52,7 +48,7 @@ public class NewsAction extends LookupDispatchAction {
     public ActionForward list(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         
         NewsForm newsForm = (NewsForm) form;
-        
+
         try {
             newsForm.setNewsList(newsService.getList());
         } catch (ServiceException ex) {

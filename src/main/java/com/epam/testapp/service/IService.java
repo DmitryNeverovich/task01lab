@@ -14,6 +14,7 @@ import java.util.List;
  * @author Dima
  */
 public interface IService {
+    
     /**
      * Create List of News objects, with information about all find object in DB
      * @return

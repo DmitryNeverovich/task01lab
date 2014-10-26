@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
 package com.epam.testapp.service;
 
@@ -10,7 +5,7 @@ import com.epam.testapp.database.*;
 import com.epam.testapp.exception.ProjectException;
 
 /**
- * Exception that provides information about error in Dao
+ * Exception that provides information about error in Service
  * 
  */
 public class ServiceException extends ProjectException{
