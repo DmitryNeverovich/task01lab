@@ -1,7 +1,7 @@
 
 package com.epam.testapp.listener;
 
-import com.epam.testapp.utils.ConverterStringToDate;
+import com.epam.testapp.util.ConverterStringToDate;
 import java.util.Date;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;

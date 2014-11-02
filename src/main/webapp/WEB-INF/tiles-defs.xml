@@ -6,8 +6,8 @@
 
 <tiles-definitions>
 
-    <definition name="header_page" path="/jsp/template/header.jsp">
-        <put name="language_box" value="/jsp/template/language_box.jsp"/>
+    <definition name="header_page" path="/jsp/tiles/body/header.jsp">
+        <put name="language_box" value="/jsp/tiles/body/language_box.jsp"/>
     </definition>
         
     <definition name="news_save" path="/jsp/layouts/main-layout.jsp">

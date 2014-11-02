@@ -1,4 +1,5 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page isELIgnored="false" %>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles" %>
 <%@ taglib uri="http://struts.apache.org/tags-html" prefix="html" %>
 <%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean" %>
@@ -10,7 +11,9 @@
 <div class="content_body">
     <html:form action="/News_action">
         <input type="hidden" name="page" value="page_view">
+              
         <nested:nest property="newsMessage">
+            <input type="hidden" name="newsID" value='<nested:write property="id"/>'>  
             <nested:hidden property="id"/>
             <c:set var="previous_page" value="news_view_page" scope="session"/>
             <c:set var="current_page" value="news_view_page" scope="session"/>

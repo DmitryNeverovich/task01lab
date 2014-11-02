@@ -3,16 +3,15 @@ package com.epam.testapp.presentation.action;
 
 import com.epam.testapp.model.News;
 import com.epam.testapp.presentation.form.NewsForm;
-import com.epam.testapp.recource.DataUtil;
 import com.epam.testapp.service.IService;
 import com.epam.testapp.service.ServiceException;
+import com.epam.testapp.util.DataUtil;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
@@ -34,6 +33,7 @@ public class NewsAction extends LookupDispatchAction {
     public void setNewsService(IService newsService) {
         this.newsService = newsService;
     }
+    
 
     /**
      * Gets list news from the service and returns the ActionForward instance for the page to view list news.
@@ -51,7 +51,7 @@ public class NewsAction extends LookupDispatchAction {
         try {
             newsForm.setNewsList(newsService.getList());
         } catch (ServiceException ex) {
-            logger.error("Problem with DAO", ex);
+            logger.error("Problem with service", ex);
             return mapping.findForward(DataUtil.ERROR_PAGE);
         }
         
@@ -74,22 +74,16 @@ public class NewsAction extends LookupDispatchAction {
      */
     public ActionForward view(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         
-        String strId = request.getParameter(DataUtil.ID);
+        NewsForm newsForm = (NewsForm) form;
         News news = null;
-        int id = 0;
-        
-        if (!strId.isEmpty()) {
-            id = Integer.valueOf(strId);
-        }
         
         try {
-            news = newsService.findById(id);
+            news = newsService.findById(newsForm.getNewsMessage().getId());
         } catch (ServiceException ex) {
-            logger.error("Problem with DAO", ex);
+            logger.error("Problem with service", ex);
             return mapping.findForward(DataUtil.ERROR_PAGE);
         }
         
-        NewsForm newsForm = (NewsForm) form;
         newsForm.setNewsMessage(news);
 
         return mapping.findForward(DataUtil.NEWS_VIEW);
@@ -107,19 +101,12 @@ public class NewsAction extends LookupDispatchAction {
     public ActionForward edit(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 
         NewsForm newsForm = (NewsForm) form;
-        String strId = request.getParameter(DataUtil.ID);
-        int id = 0;
-              
-        if (StringUtils.isNotEmpty(strId)) {
-            id = Integer.valueOf(strId);
-        }else{
-            id = newsForm.getNewsMessage().getId();
-        }
+        int id = newsForm.getNewsMessage().getId();
         
         try {
             newsForm.setNewsMessage(newsService.findById(id));
         } catch (ServiceException ex) {
-            logger.error("Problem with DAO", ex);
+            logger.error("Problem with service", ex);
             return mapping.findForward(DataUtil.ERROR_PAGE);
         }
         
@@ -141,7 +128,7 @@ public class NewsAction extends LookupDispatchAction {
         try {
             newsService.remove(newsForm.getNewsID());
         } catch (ServiceException ex) {
-            logger.error("Problem with DAO", ex);
+            logger.error("Problem with service", ex);
             return mapping.findForward(DataUtil.ERROR_PAGE);
         }
         
@@ -177,20 +164,20 @@ public class NewsAction extends LookupDispatchAction {
     public ActionForward save(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         
         NewsForm newsForm = (NewsForm) form;
-        String id = request.getParameter(DataUtil.ID);        
         
-        if (!StringUtils.equals(id, DataUtil.ID_ZERO) && !StringUtils.isEmpty(id)) {
-            newsForm.getNewsMessage().setId(Integer.valueOf(id));
-        }
         try {
             News news = newsService.save(newsForm.getNewsMessage());
             newsForm.setNewsMessage(news);
         } catch (ServiceException ex) {
-            logger.error("Problem with DAO", ex);
+            logger.error("Problem with service", ex);
             return mapping.findForward(DataUtil.ERROR_PAGE);
         }
 
-        return mapping.findForward(DataUtil.NEWS_VIEW);
+        ActionRedirect redirectView = new ActionRedirect(DataUtil.ACTION);
+        redirectView.addParameter(DataUtil.METHOD, DataUtil.VIEWS);
+        redirectView.addParameter(DataUtil.ID, newsForm.getNewsMessage().getId());
+        
+        return redirectView;
     }
 
     /**

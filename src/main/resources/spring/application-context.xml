@@ -1,28 +1,96 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
        xmlns:context="http://www.springframework.org/schema/context"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+       xsi:schemaLocation="http://www.springframework.org/schema/beans 
+          http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+          http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
 ">
     <context:property-placeholder location="/WEB-INF/classes/properties/database_config.properties" />    
-          
+    
+    <bean id="dataSource"
+          class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="${database.driver.class.name}" />
+        <property name="url" value="${database.url}" />
+        <property name="username" value="${database.user}" />
+        <property name="password" value="${database.password}" />
+    </bean>
+        
+    <!--JDBC-->
     <bean id="connectionPool" class="com.epam.testapp.database.connectionpool.ConnectionPool" 
           destroy-method="closeAllConnection">
-        <constructor-arg name="driverClassName" value="${database.driver.class.name}" />
-        <constructor-arg name="url" value="${database.url}" />
-        <constructor-arg name="username" value="${database.user}" />
-        <constructor-arg name="password" value="${database.password}" />
+        <constructor-arg type="java.lang.String" value="${database.driver.class.name}" />
+        <constructor-arg type="java.lang.String" value="${database.url}" />
+        <constructor-arg type="java.lang.String" value="${database.user}" />
+        <constructor-arg type="java.lang.String" value="${database.password}" />
     </bean>
-       
-    <bean id="newsDAO" class="com.epam.testapp.database.impl.NewsDAO">
-        <property name="connectionPool" ref="connectionPool" />
+        
+    <!-- Hibernate -->
+    <bean id="hibernate4SessionFactory"
+          class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <property name="mappingResources">
+            <list>
+                <value>hibernate.hbm.xml</value>
+            </list>
+        </property>
+        <property name="hibernateProperties">
+            <value>hibernate.dialect=org.hibernate.dialect.OracleDialect</value>
+        </property>
     </bean>
+        
+    <!-- JPA -->     
+    <bean id="entityManagerFactory"
+          class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="packagesToScan" value="com.epam.testapp.model" />
+        <property name="dataSource" ref="dataSource" />
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter" />
+        </property>
+        <property name="jpaProperties">
+            <props>
+                <prop key="hibernate.hbm2ddl.auto">update</prop>
+                <prop key="hibernate.dialect">org.hibernate.dialect.Oracle10gDialect</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory" />
+    </bean>
+ 
+    <tx:annotation-driven transaction-manager="transactionManager" />
+
+    <bean id="persistenceExceptionTranslationPostProcessor"
+          class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor" />
     
+    <bean
+        class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor" />
+    
+    
+    <!-- DAO -->    
+    
+    <!--JDBC DAO-->
+    <!--<bean id="newsDAO" class="com.epam.testapp.database.impl.NewsDAO">
+        <property name="connectionPool" ref="connectionPool" />
+    </bean>-->
+    
+    <!--JPA DAO-->
+    <bean id="newsDAO" class="com.epam.testapp.database.impl.NewsDAOJPA"/>
+    
+    <!--Hibernate DAO-->
+<!--    <bean id="newsDAO" class="com.epam.testapp.database.impl.NewsDAOHibernate">
+        <property name="sessionFactory" ref="hibernate4SessionFactory"/>
+    </bean>-->
+    
+    <!-- Service -->
     <bean id="newsService" class="com.epam.testapp.service.impl.NewsService">
         <property name="newsDAO" ref="newsDAO" />
     </bean>
         
+    <!-- Action -->
     <bean name="/News_action" class="com.epam.testapp.presentation.action.NewsAction">
         <property name="newsService" ref="newsService"/>
     </bean> 

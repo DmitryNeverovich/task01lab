@@ -20,7 +20,7 @@
         <c:set var="current_page" value="news_save_page" scope="session"/>
         <div class="news_title">
             <div class="news_title_head"><bean:message key="news.save.news_title"/></div>
-            
+
             <div class="news_title_body_edit"><html:text name="newsForm" property="newsMessage.title" maxlength="100"/></div>
         </div>
         <div class="news_title">
@@ -37,7 +37,8 @@
         </div>
         <div class="news_edit_submit">
             <html:submit property="method" onclick="return checkForm()"><bean:message key="news.save.submit.save"/></html:submit>
-            <html:submit property="method"><bean:message key="news.save.submit.cancel"/></html:submit>
+            <html:submit property="method" onclick="return cancel()"><bean:message key="news.save.submit.cancel"/></html:submit>
             </div>
-    </html:form>
+    </html:form>   
+
 </div>

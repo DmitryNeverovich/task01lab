@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+  <class name="com.epam.testapp.model.News" table="NEWS_DATA">
+      <id name="id" type="integer">
+          <column name="NEWS_ID" not-null="true"/>
+          <generator class="increment"/>
+      </id>
+      <property name="title" type="string">
+          <column name="TITLE" length="100"/>
+      </property>
+      <property name="date" type="date">
+          <column name="NEWS_DATE" length="10"/>
+      </property>
+      <property name="brief" type="string">
+          <column name="BRIEF" length="500"/>
+      </property>
+      <property name="content" type="string">
+          <column name="CONTENT" length="2000"/>
+      </property>
+  </class>
+  <query name="deleteAllNews">
+       <![CDATA[delete from News n where n.id in(:ids)]]>
+  </query>
+</hibernate-mapping>

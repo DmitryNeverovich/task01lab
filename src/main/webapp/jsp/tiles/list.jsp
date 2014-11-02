@@ -21,8 +21,8 @@
                 <div class="news_head"><pre><bean:write name="news" property="title" /></pre></div>                
                 <div class="news_content"><pre><bean:write name="news" property="brief" /></pre></div>
                 <div class="news_menu">
-                    <a href="/NewsManagement/News_action.do?method=view&id=${news.id}"><bean:message key="news.list.content.menu.view"/></a>
-                    <a href="/NewsManagement/News_action.do?method=edit&id=${news.id}"><bean:message key="news.list.content.menu.edit"/></a>
+                    <html:link action="/News_action.do?method=view" paramId="newsMessage.id" paramName="news" paramProperty="id"><bean:message key="news.list.content.menu.view" /></html:link>
+                    <html:link action="/News_action.do?method=edit" paramId="newsMessage.id" paramName="news" paramProperty="id"><bean:message key="news.list.content.menu.edit" /></html:link>
                     <input type="checkbox" name="newsID" value="${news.id}"/>
                 </div>
             </div>

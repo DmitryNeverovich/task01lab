@@ -1,11 +1,10 @@
 
-package com.epam.testapp.utils;
+package com.epam.testapp.util;
 
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 import org.apache.commons.beanutils.Converter;
 
 /**
@@ -16,15 +15,13 @@ public class ConverterStringToDate implements Converter{
     
     private final static org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(ConverterStringToDate.class);
     
-    private final static String DATE_FORMAT = "MM/dd/yyyy";
-    
     @Override
     public Date convert(Class type, Object o) {
         String dateStr = (String) o;
         Date date = null;
         
         try {
-            DateFormat dateFormat  = new SimpleDateFormat(DATE_FORMAT);
+            DateFormat dateFormat  = new SimpleDateFormat(DataUtil.DATE_FORMAT);
             date = dateFormat.parse(dateStr);
         } catch (ParseException ex) {
             logger.error("Date is not converted", ex);

@@ -5,6 +5,7 @@
  */
 package com.epam.testapp.database.impl;
 
+import com.epam.testapp.database.AbstractNewsDAO;
 import com.epam.testapp.database.DAOException;
 import com.epam.testapp.model.News;
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
@@ -59,7 +60,9 @@ public class NewsDAOTest {
     private DataSource dataSource;
     
     @Autowired
-    private NewsDAO newsDAO;
+    private AbstractNewsDAO newsDAO;
+    
+    
 
     @BeforeClass
     public static void setUpClass() throws Exception {
@@ -148,7 +151,7 @@ public class NewsDAOTest {
     public void testRemove() throws Exception {
         
         List<News> beforeNewsList = newsDAO.getList();
-        News news = newsDAO.findById(3);
+        News news = newsDAO.findById(2);
         Integer[] ids = {news.getId() };
         newsDAO.remove(ids);
         List<News> afterNewsList = newsDAO.getList();
@@ -161,8 +164,13 @@ public class NewsDAOTest {
      */
     @Test
     public void testFindById() throws Exception {
-
-        News result = newsDAO.findById(1);
+        News result = null;
+        try {
+            result = newsDAO.findById(1);
+        } catch (DAOException ex) {
+            Logger.getLogger(NewsDAOTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+//        News result = newsDAO.findById(1);
         assertEquals(NEWS_TITLE, result.getTitle());
     }
 

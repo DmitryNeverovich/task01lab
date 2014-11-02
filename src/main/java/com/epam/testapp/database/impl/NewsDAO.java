@@ -7,6 +7,7 @@ import com.epam.testapp.database.DAOAttributeName;
 import com.epam.testapp.database.DAOException;
 import com.epam.testapp.database.AbstractNewsDAO;
 import com.epam.testapp.model.News;
+import com.epam.testapp.util.GeneratorDeleteQuery;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -176,9 +177,9 @@ public class NewsDAO extends AbstractNewsDAO {
 
         try {
             connection = connectionPool.getConnection();
-            StringBuilder sqlRequestDelete = generateDeleteQuery(ids);
+            String sqlRequestDelete = GeneratorDeleteQuery.generateDeleteQuery(ids);
 
-            preparedStatement = connection.prepareStatement(sqlRequestDelete.toString());
+            preparedStatement = connection.prepareStatement(sqlRequestDelete);
             preparedStatement.executeUpdate();
             complete = true;
         } catch (SQLException ex) {

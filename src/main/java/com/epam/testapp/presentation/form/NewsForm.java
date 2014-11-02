@@ -3,8 +3,6 @@ package com.epam.testapp.presentation.form;
 
 import com.epam.testapp.model.News;
 import java.util.List;
-import java.util.Locale;
-import java.util.ResourceBundle;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;

@@ -1,3 +1,6 @@
+var data_text;
+var data_brief;
+var data_content;
 function checkForm() {
 
     var el,
@@ -252,6 +255,16 @@ function contentCheckLength(textArea) {
     }
     return true;
 }
+function cancel() {
+    el_text = document.getElementsByName("newsMessage.title")[0];
+    el_brief = document.getElementsByName("newsMessage.brief")[0];
+    el_content = document.getElementsByName("newsMessage.content")[0];
+
+    el_text.value = data_text; 
+    el_brief.value = data_brief; 
+    el_content.value = data_content; 
+    return true;
+}
 window.onload = function checkDeleteAllSubmit() {
     var current_page = document.getElementsByName("page")[0];
     if (current_page.value == "page_edit") {
@@ -259,6 +272,14 @@ window.onload = function checkDeleteAllSubmit() {
         format_date_el = document.getElementsByName("newsMessage.date")[0];
 
         date_el.value = format_date_el.value;
+
+        el_text = document.getElementsByName("newsMessage.title")[0];
+        el_brief = document.getElementsByName("newsMessage.brief")[0];
+        el_content = document.getElementsByName("newsMessage.content")[0];
+
+        data_text = el_text.value;
+        data_brief = el_brief.value;
+        data_content = el_content.value;
     }
 
     if (current_page.value == "page_list") {

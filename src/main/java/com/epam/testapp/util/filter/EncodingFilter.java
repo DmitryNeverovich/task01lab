@@ -1,6 +1,7 @@
 
-package com.epam.testapp.utils.filter;
+package com.epam.testapp.util.filter;
 
+import com.epam.testapp.util.DataUtil;
 import java.io.IOException;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -23,7 +24,7 @@ public class EncodingFilter implements Filter {
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        code = filterConfig.getInitParameter(ENCODING);
+        code = filterConfig.getInitParameter(DataUtil.ENCODING);
     }
 
     @Override
